@@ -26,4 +26,15 @@ public class PaymentHelper {
         }
     }
 
+    static void showAllPayments(){
+        System.out.println("Detalles de todos los pagos: ");
+        for(PreviousPayment payment : previousPayments) {
+            payment.previousPaymentInfo();
+        }
+        for (NewPayment payment : newPayments){
+            payment.newPayment();
+        }
+
+    }
+
 }
