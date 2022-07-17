@@ -27,6 +27,7 @@ public class Cliente {
         // Procesa todas las solicitudes de pago nuevos de todos los usuarios
         helper.processNewPayments();
 
+        PaymentHelper.showAllPayments();
 
     }
 }
