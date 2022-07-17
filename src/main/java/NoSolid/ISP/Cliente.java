@@ -8,7 +8,8 @@ class Cliente {
         System.out.println("Demostracion sin ISP");
         Impresora impresora = new ImpresoraAvanzada();
         impresora.printDocument();
-        impresora.sendFax();
+        Fax analogFax = new AnalogFax();
+        impresora.sendFax(analogFax);
 
         impresora = new ImpresoraBasica();
         impresora.printDocument();

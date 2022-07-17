@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentHelper {
-    List<NewPayment> newPayments = new ArrayList<NewPayment>();
-    List<PreviousPayment> previousPayments = new ArrayList<PreviousPayment>();
+    static List<NewPayment> newPayments = new ArrayList<NewPayment>();
+    static List<PreviousPayment> previousPayments = new ArrayList<PreviousPayment>();
 
     public void addNewPayment(NewPayment user){
         newPayments.add(user);
@@ -36,5 +36,4 @@ public class PaymentHelper {
         }
 
     }
-
 }
