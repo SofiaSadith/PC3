@@ -127,3 +127,142 @@ Cliente.java
 >![](src/main/resources/I13.jpeg)
 >![](src/main/resources/I14.jpeg)
 >![](src/main/resources/I15.jpeg)
+>
+
+
+## Pregunta 25
+Reemplaza el segmento de código con una expresión lambda adecuada. Tú eliges cuál quieres usar.
+
+```java
+class Cliente {
+    public static void main(String[] args) {
+        System.out.println("Demostracion sin ISP");
+        List<Impresora> impresoras = new ArrayList<Impresora>();
+        impresoras.add(new ImpresoraAvanzada());
+        impresoras.add(new ImpresoraBasica());
+        impresoras.forEach((dispositivo)->{
+            dispositivo.printDocument();
+            dispositivo.sendFax();
+        });
+
+    }
+
+}
+```
+
+## Pregunta 26
+Muestra la salida y explica los resultados en función de los métodos entregados.
+
+Salida:
+
+>![](src/main/resources/cap25.jpg)
+
+La impresora avanzada cumple ambas funcionalidades correctamente.
+Mientras la impresora basica solo imprime documentos pero no puede enviar fax porque
+el método sendFax() de ImpresoraBasica está desarrollado para que lance una excepcion
+en tiempo de ejecución.
+
+## Pregunta 27
+Para terminar esta pregunta, en la sección de SOLID del código entregado, completa los
+siguientes archivos. No olvides explicar tus resultados.
+
+Impresora.java:
+```java
+interface Impresora {
+    void printDocument();
+}
+```
+DispositivoFax.java:
+```java
+interface DispositivoFax {
+   void sendFax();
+}
+```
+ImpresoraBasica.java:
+```java
+public class ImpresoraBasica implements Impresora{
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora básica imprime un documento.");
+    }
+}
+```
+ImpresoraAvanzada.java:
+```java
+public class ImpresoraAvanzada implements Impresora, DispositivoFax{
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora avanzada imprime un documento.");
+    }
+
+    @Override
+    public void sendFax() {
+        System.out.println("La impresora avanzada envía un fax.");
+    }
+}
+```
+Cliente.java:
+```java
+public class Cliente {
+    public static void main(String[] args) {
+        System.out.println("Demostracion ISP");
+
+        Impresora impresora = new ImpresoraBasica();
+        impresora.printDocument();
+        impresora = new ImpresoraAvanzada();
+        impresora.printDocument();
+
+        DispositivoFax fax = new ImpresoraAvanzada();
+        fax.sendFax();
+
+    }
+}
+```
+Salida:
+
+>![](src/main/resources/cap26.jpg)
+
+Esta nueva implementacion de las dos impresoras a partir de dos
+interfaces separadas (DispositivoFax e Impresora) permiten que
+las clases ImpresoraAvanzada e ImpresoraBasica solo implementen
+los metodos que realmente usan (ISP).
+
+## Pregunta 28
+¿Qué sucede si usa un método predeterminado dentro de la interfaz?
+
+Las clases que implementen este método no tendrian necesidad de
+desarrollarla, solo la sobreescribirian si necesitan modificarla para un uso
+especifico.
+
+## Pregunta 29
+¿Qué sucede si proporcionas un método de fax predeterminado en una interfaz?.
+
+La clase ImpresoraAvanzada podría implementar la funcion sendFax, sin necesidad
+de desarrollarla.
+
+El problema es que hay veces que vas a querer implementar una interfaz
+en una clase que estés desarrollando, pero estarías implementando
+métodos que tal vez no necesita tu clase.
+
+## Pregunta 30
+¿Qué sucede si usa un método vacío, en lugar de lanzar la excepción?
+
+ImpresoraBasica.java:
+```java
+class ImpresoraBasica implements Impresora {
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora basica imprime un documento.");
+    }
+
+    @Override
+    public void sendFax() {
+        //throw new UnsupportedOperationException();
+    }
+}
+```
+Salida:
+
+>![](src/main/resources/cap30.jpg)
+
+Vemos que se ejecuta sin errores.
