@@ -382,9 +382,10 @@ public class Cliente {
     }
 }
 ```
+## Principio de Segregación de Interfaces 
 
 * **Pregunta 19 ¿Por qué un usuario necesita cambiar una clase base (o una interfaz)? Para responder a esto, supongamos que deseas mostrar qué el tipo de fax está utilizando en una fase de desarrollo posterior.**
-
+**(SOFIA POMA)**
 >En la clase Cliente, en el main, se instancia primero un objeto impresora de tipo ImpresoraAvanzada para luego ejecutar sus métodos printDocument y sendFax. Hasta este punto todo está bien debido a que una impresora avanzada cuenta con la capacidad de hacer estas dos cosas. El problema radica cuando, una vez instanciado otro objeto impresora esta vez de tipo ImpresoraBasica, llama de manera análoga sus dos métodos printDocument y sendFax. Esto debido a que una impresora básica no está en la capacidad de realizar la operación sendFax, sin embargo, cuenta con ese método ya que se está implementado de la interfaz Impresora. Entonces, ya que no puede realizar dicha operación, es por ello que lanza una excepción al momento de ejecutar este método (En este caso está comentado para que no se llegue a lanzar).Violando claramente el principio de segregación de interfaz.
 
 ```java
@@ -402,8 +403,182 @@ class Cliente {
 }
 ```
 
+>Para lograr hacer que cumpla, crearemos una interfaz con solo los métodos que una clase o cliente en específico requiera haciendo que solo este tipo de clase las implemente, evitando así, clases con métodos que no utiliza. En particular para nuestro problema implementamos la interfaz JerarquiaFax.
 
-## Principio de Segregación de Interfaces (Sebastian Segundo)
+```java
+interface  Fax {
+    void varFax();
+}
+
+class LanFax implements Fax{
+    @Override
+    public void varFax(){
+        System.out.println("Fax de tipo LanFax");
+    }
+}
+
+class EFax implements Fax{
+    @Override
+    public void varFax(){
+        System.out.println("Fax de tipo EFax");
+    }
+}
+
+class AnalogFax implements Fax{
+    @Override
+    public void varFax() {
+        System.out.println("Fax de tipo AnalogFax");
+    }
+}
+```
+* **Pregunta 20 Para usar esta jerarquía de herencia, una vez que modificas el método sendFax() a sendFax(Fax faxType) en la clase ImpresoraAvanzada, exige que cambies la interfaz de Impresora (sí, aquí también rompe el OCP). Cuando actualices Impresora, también debes actualizar la clase impresoraBasica para adaptarse a este cambio. ¡Ahora ves el problema!. Explica el problema.**
+**(SOFIA POMA)**
+
+>Ahora bien, nos pondremos en el caso de un desarrollo posterior el cual requiere mostrar que tipo de fax se está utilizando. Para lograr esto, primero tenemos que cambiar el método sendFax en la clase ImpresoraAvanzada, al cual ahora le tendremos que pasar por parámetro el tipo de fax que se va a utilizar.
+
+```java
+public class ImpresoraAvanzada implements Impresora {
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora avanzada imprime un documento.");
+    }
+
+    @Override
+    public void sendFax(Fax faxType) {
+        faxType.varFax();
+        System.out.println("La impresora avanzada envía un fax.");
+    }
+}
+
+```
+>Hecho esto, el código nos obligará a tener que tambien que cambiar la interfaz Impresora puesto que el método que se está modificando es el de ella, lo que a su vez conlleva a tener que realizar también cambios en el método sendFax de la clase ImpresoraBasica puesto que esta clase también está implementando la interfaz Impresora, a pesar de que esta clase no use dicho método.
+
+```java
+interface Impresora {
+    void printDocument();
+
+    void sendFax(Fax fax);
+}
+```
+```java
+class ImpresoraBasica implements Impresora {
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora basica imprime un documento.");
+    }
+
+    @Override
+    public void sendFax(Fax fax) {
+        //throw new UnsupportedOperationException();
+    }
+}
+
+```
+
+* **Pregunta 21 Si has entendido correctamente el problema. El ISP te sugiere que te ocupes de este tipo de escenario. Explica tu respuesta.**
+**(BRUNO CIPRIANO)**
+
+>El principio de segregación de Interfaz nos dice que es mejor usar interfaces específicas que utilizar una sola interfaz general, ya que de esa manera se evita usar métodos en clases que no son necesarias el uso de estos. Para nuestro caso, tenemos que dividir la interfaz general en dos interfaces una que sea exclusivamente con el método que permite enviar fax y otra exclusivamente con el método que permite la impresión de documentos  y de esa manera la clase Impresora básica ya no tendría métodos innecesarios. 
+
+* **Pregunta 22 ¿Es conveniente usar e inicializar el siguiente código?**
+```java
+interface Impresora {
+    void printDocument();
+    void sendFax();
+}
+```
+
+>En principio el código que se muestra funciona, pero el problema surge al momento de querer agregar más funcionalidades a una impresora en particular, funcionalidades que quizás no comparta con el otro tipo de impresora. En este caso, como ya mencionamos en las preguntas anteriores, añadir un método a un tipo de impresora conlleva a tener que cambiar la interfaz que implementa y todas las clases que también implementan. 
+
+
+
+* **Pregunta 23 Si comienzas tu codificación considerando las impresoras avanzadas que pueden imprimir y enviar un fax, está bien. Pero en una etapa posterior, si tu programa también necesita admitir impresoras básicas,¿ qué código puedes escribir?, ¡Ya has visto que este código puede causarte un problema potencial! Está bastante claro que una impresora básica no necesita enviar un fax. Pero dado que ImpresoraBasica implementa Impresora, debe proporcionar una implementación de sendFax(). Como resultado, cuando sendFax cambia en la interfaz Impresora, ImpresoraBasica necesita adaptarse al cambio. El ISP sugiere que evites este tipo de situaciones. En este contexto, Cuando lanzas la excepción e intentas usar código polimórfico de manera incorrecta, ves el impacto de violar el LSP. Una vez que modificas Impresora, también viola el OCP.**
+**(BRUNO CIPRIANO)**
+
+>Como sabemos, para una impresora básica no es posible enviar un fax, sin embargo, el cliente tal vez pretenda hacer uso de esta para intentar enviar un fax. Para prevenir esto, al momento de llamar al método sendFax se puede crear y lanzar excepciones para indicar de que lo que se está tratando de hacer no es posible.
+
+```java
+class ImpresoraBasica implements Impresora {
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora basica imprime un documento.");
+    }
+
+    @Override
+    public void sendFax(Fax fax) {
+        throw new UnsupportedOperationException();
+    }
+}
+```
+>Otra manera es presentar por consola un mensaje de “error” diciendo que la operación que se solicita no es posible para el tipo de impresora.
+
+```java
+class ImpresoraBasica implements Impresora {
+    @Override
+    public void printDocument() {
+        System.out.println("La impresora basica imprime un documento.");
+    }
+
+    @Override
+    public void sendFax(Fax fax) {
+        System.out.println("La solicitud que se presenta no es apta para el tipo de impresora.");
+    }
+}
+```
+
+* **Pregunta 24 Comprueba tus respuestas añadiendo dentro de main(), el siguiente código polimórfico:**
+
+**Impresora impresora = new ImpresoraAvanzada();**
+
+**impresora.printDocument();**
+
+**impresora.sendFax();**
+
+**impresora = new ImpresoraBasica();**
+
+**impresora.printDocument();**
+
+**//impresora .sendFax();**
+**Además, no puedes escribir algo como**
+
+**List<Impresora> impresoras = new ArrayList<Impresora>();**
+
+**impresoras.add(new ImpresoraAvanzada());**
+
+**impresoras.add(new ImpresoraBasica());**
+
+**for (Impresora dispositivo : impresoras) { .printDocument();**
+
+**// dispositivo.sendFax();**
+
+**}**
+**(BRUNO CIPRIANO)**
+
+>Añadiendo el código polimórfico al método main para comprobar nuestras respuestas.
+```java
+class Cliente {
+    public static void main(String[] args) {
+
+        List<Impresora> impresoras = new ArrayList<Impresora>();
+        impresoras.add(new ImpresoraAvanzada());
+        impresoras.add(new ImpresoraBasica());
+        impresoras.forEach((dispositivo) -> {
+            dispositivo.printDocument();
+            dispositivo.sendFax(new LanFax());
+        });
+    }
+}
+```
+>Nuestra primera solución, en la cual indicamos que al no ser posible que una impresora básica realice la operación de enviar un fax. Por lo tanto se enviará creará y lanzará una excepción. En la salida de esta solución, se puede observar que para las dos impresoras almacenadas en la lista, la impresora avanzada procede normalmente. Ahora bien, para el turno de la impresora básica, sí se llegan a ejecutar los dos métodos, siendo el método sendFax el que crea y lanza la excepción debido a que esta impresora no puede realizar dicha operación. Entonces concluimos que se está lanzando excepciones en tiempo de ejecución.
+
+>![](src/main/resources/M1.jpg)
+
+>Para nuestra segunda solucion, el metodo sendFax para una impresora básica debe mostrar un mensaje de “error” diciendo que no es posible realizar esta operación para este tipo de impresora.
+
+>![](src/main/resources/M2.jpg)
+
+
+## (Sebastian Segundo 25-30)
 
 ## Pregunta 25
 Reemplaza el segmento de código con una expresión lambda adecuada. Tú eliges cuál quieres usar.
