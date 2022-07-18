@@ -123,11 +123,22 @@ Cliente.java
 
     **Cliente.java**
 
+>La clase Estudiante es una clase abstracta que instancia objetos de la clase Estudiante. 
 >![](src/main/resources/I12.jpeg)
+>La clase ArteEstudiante hereda la clase Estudiante. 
 >![](src/main/resources/I13.jpeg)
+>La clase CienciaEstudiante hereda la clase Estudiante. 
 >![](src/main/resources/I14.jpeg)
+>DistinctionDecider es una interfaz pública que tiene el método evaluateDistinction que recibe como parámetro el objeto estudiante de clase Estudiante. 
 >![](src/main/resources/I15.jpeg)
->
+>La clase ScienceDistinctionDecider implementa la interfaz DistinctionDecider, tiene al método evaluateDistintion que recibe como parámetro el objeto estudiante de la clase Estudiante, aquí se evalúa si el puntaje del estudiante de ciencias es mayor a 80 para que sea merecedor de una distinción. 
+>![](src/main/resources/I16.jpeg)
+>La clase ArtsDistinctionDecider implementa la interfaz DistinctionDecider, tiene al métdo evaluateDistintion que recibe como parámetro el objeto estudiante de la clase Estudiante, aquí se evalúa si el puntaje del estudiante de artes es mayor a 60 para que sea merecedor de una distinción. 
+>![](src/main/resources/I17.jpeg)
+>En la clase Cliente se crean listas para los diferentes tipos de estudiantes y sus corrientes, en este caso una lista para los estudiantes de Ciencias y otra lista para los estudiantes de Arte.
+>![](src/main/resources/I18.jpg)
+>Cómo se puede ver ahora si cumple el principio de OCP ya que tanto las clase ArteEstudiante y la claseCienciaEstudiante se extienden de una misma clase por lo cuál se puede añadir nuevo código, pero manteniendo el código base. 
+
 
 ## Principio de Segregación de Interfaces (Sebastian Segundo)
 
