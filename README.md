@@ -142,7 +142,7 @@ class Cliente {
         impresoras.add(new ImpresoraBasica());
         impresoras.forEach((dispositivo)->{
             dispositivo.printDocument();
-            dispositivo.sendFax();
+            dispositivo.sendFax(new LanFax());
         });
 
     }
