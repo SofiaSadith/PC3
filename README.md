@@ -12,4 +12,22 @@
 
 * **Pregunta 2 ¿Cuál es el problema con este diseño y las razones posibles del problema?**
 
->El problema con este diseño es que viola el principio de responsabilidad única ya que como se puede observar la clase Empleado tiene 3 responsabilidades distintas, el método displayEmpDetail(), el método checkSeiority, el método generateEmpId, cada una de estos métodos tiene diferentes finalidades lo que provoca un alto acoplamiento y una baja cohesión, lo que hace que nuestro diseño sea frágil. Si quisiéramos, por ejemplo, imprimir los detalles del empleado de manera distinta, no podríamos debido a que solo contamos con un método print. Otro problema sería que si quisiéramos testear el método que verifica la experiencia en años del empleado, estamos obligados a testear los otros métodos también. Es por esto que una posible solución es mover este método a una sola clase la cual se encargará de tener todos los métodos de impresión.
+>El problema con este diseño es que viola el principio de responsabilidad única ya que como se puede observar la clase Empleado tiene 3 responsabilidades distintas, el método displayEmpDetail(), el método checkSeniority, el método generateEmpId, cada una de estos métodos tiene diferentes finalidades lo que provoca un alto acoplamiento y una baja cohesión, lo que hace que nuestro diseño sea frágil. Si quisiéramos, por ejemplo, imprimir los detalles del empleado de manera distinta, no podríamos debido a que solo contamos con un método print. Otro problema sería que si quisiéramos testear el método que verifica la experiencia en años del empleado, estamos obligados a testear los otros métodos también. Es por esto que una posible solución es mover este método a una sola clase la cual se encargará de tener todos los métodos de impresión.
+
+* **Pregunta 3 Modifica la clase Empleado. Agrega dos clases SeniorityChecker que contiene el
+método checkSeniority() y la clase GeneradorIDEmpleado contiene el método
+generateEmpId(...) para generar la identificación del empleado.
+Para mejorar la legibilidad del código y evitar torpezas dentro del método main(), utiliza el
+método estático showEmpDetail(...). Este método llama al método displayEmpDetail() de
+Empleado, al método generateEmpId() de GeneradorIDEmpleado y al método checkSeniority()
+de SeniorityChecker. Tú entiendes que este método no era necesario, pero hace que el código
+del cliente sea simple y fácilmente comprensible.**
+
+
+![](src/main/resources/I2.jpeg)
+
+
+![](src/main/resources/I3.jpeg)
+
+
+![](src/main/resources/I4.jpeg)
