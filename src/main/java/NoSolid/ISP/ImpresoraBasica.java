@@ -8,6 +8,6 @@ class ImpresoraBasica implements Impresora {
 
     @Override
     public void sendFax(Fax fax) {
-        throw new UnsupportedOperationException();
+        //throw new UnsupportedOperationException();
     }
 }
