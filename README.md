@@ -137,8 +137,6 @@ Cliente.java
 >![](src/main/resources/I17.jpeg)
 >En la clase Cliente se crean listas para los diferentes tipos de estudiantes y sus corrientes, en este caso una lista para los estudiantes de Ciencias y otra lista para los estudiantes de Arte.
 ```java
-import java.util.ArrayList;
-import java.util.List;
 public class Cliente {
     public static void main(String[] args) {
         System.out.println("Demostracion OCP");
@@ -191,30 +189,125 @@ public class Cliente {
 }
 
 ```
->Cómo se puede ver ahora si cumple el principio de OCP ya que tanto las clase ArteEstudiante y la claseCienciaEstudiante se extienden de una misma clase por lo cuál se puede añadir nuevo código, pero manteniendo el código base. 
+>Cómo se puede ver ahora si cumple el principio de OCP ya que tanto las clase ArteEstudiante y la claseCienciaEstudiante se extienden de una misma clase por lo cuál se puede añadir nuevo código, pero manteniendo el código base.
+
+* **Pregunta 11 ¿Cuáles son las principales ventajas ahora?**
+
+>Una de las ventajas principales es que ahora se cumple con el principio de Abierto cerrado con lo cual podemos agregar más tipos de corrientes sin la necesidad de modificar el código base solo extendiendo de la clase abstracta Estudiante. Esto debido a que ahora se cuenta con una clase en particular para cada corriente que se tenga. De modo que si se desea agregar una nueva corriente, simplemente se hace la creación de una nueva clase la cual hereda de la clase Estudiante para luego pasar a definirla. Ahora bien, al momento de hacer las nuevas distinciones para esta nueva corriente solo se tendrá que implementar la interfaz DistinctionDecider para implementar la forma en que se distinguirá cada estudiante.
+
+## Principio de sustitución de Liskov (Sofía Poma)
+
+* **Pregunta 12 Muestra la salida y explica los resultados en función de los métodos entregados**
+
+>![](src/main/resources/I19.jpg)
+
+>Tenemos una clase principal, que es la clase Cliente. la cual cuenta con el método main. Primero se imprime un mensaje diciendo que se hará una demostración sin LSP. Luego, se instancia un objeto helper de la clase PaymentHelper (Aquí se guardarán a los ayudantes). Una vez creado este objeto, se instancia dos objetos de la clase RegisteredUserPayment, estos vendrían a ser los usuarios registrados, en este caso sería Abejita y Chalito, estos usuarios también se agregan a helper, luego se procesa el pago usando la clase PaymentHelper llamando a los métodos showPreviousPayments y ProcessNewPayment.
+>La clase RegisteredUserPayment cuenta con el atributo name, el constructor y los métodos previusPaymentInfo, el cual hace uso del atributo name imprimiendo un mensaje diciendo que está recuperando los últimos pagos de un ayudante; y newPayment, el cual también hace uso de name imprimiendo un mensaje diciendo que está procesando la actual solicitud de pago.
+>Tenemos la interfaz Payment en dónde se encuentran los métodos previousePaymentInfo y newPayment. En la clase PaymentHelper se crea una lista Payment, en esta clase también encontraremos a  los métodos adduser, showPreviousPayments y el método processNewPayments. El método showPreviousPayments hace uso del método previousePaymentInfo de la interfaz y el método processNewPayment hace uso del método newPayment de la interfaz, y usando un for recorremos  cada uno de los elementos de la lista Payment, en cada iteración el elemento hace un llamado al método newPayment, lo mismo ocurre en el método previousPaymentInfo solo que en esta caso en cada interación hace un llamado al método previousPaymentInfo
 
 
-## Principio de Segregación de Interfaces (Sebastian Segundo)
 
-## Pregunta 25
-Reemplaza el segmento de código con una expresión lambda adecuada. Tú eliges cuál quieres usar.
+
+* **Pregunta 13 Ahora supongamos que tienes un nuevo requisito que dice que necesitas admitir usuarios invitados en el futuro. Puedes procesar la solicitud de pago de un usuario invitado, pero no muestra su último detalle de pago. Entonces, crea la siguiente clase que implementa la interfaz de pago de la siguiente manera:**
 
 ```java
-class Cliente {
-    public static void main(String[] args) {
-        System.out.println("Demostracion sin ISP");
-        List<Impresora> impresoras = new ArrayList<Impresora>();
-        impresoras.add(new ImpresoraAvanzada());
-        impresoras.add(new ImpresoraBasica());
-        impresoras.forEach((dispositivo)->{
-            dispositivo.printDocument();
-            dispositivo.sendFax(new LanFax());
-        });
+public class GuestUserPayment implements Payment{
+    String name;
+    public GuestUserPayment() {
+        this.name = "guest";
+    }
+    @Override
+    public void previousPaymentInfo(){
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public void newPayment(){
+        System.out.println("Procesando de "+name+ "pago actual request.");
+    }
+}
+
+```
+* **Pregunta 14 Dentro del método main(), utilizas una instancia de usuario invitado e intentas usar su clase auxiliar de la misma manera,¿ qué tipo de excepción te encuentras?¿Cuál es la solución?**
+
+>![](src/main/resources/I21.jpg)
+
+>Se puede observar en la salida que la ejecución del código está correcta hasta que tiene que imprimir el último pago para el ayudante instanciado con la clase GuestUserPayment. Esto debido a que en dicha clase está sobrescrito el método previusPaymentInfo, el cual crea y lanza una excepción del tipo UnsupportedOperationException. Dicha excepción es la responsable de que el código no continúe con la ejecución normal.
+>Una solución es que en lugar de crear y lanzar una excepción, se imprima un mensaje de “error” que exprese que no es posible realizar esta operación para este tipo de usuario.
+
+* **Pregunta 15 Todo lo anterior Lo más importante es que viola el OCP cada vez que modifica una clase existente que usa esta cadena if-else. Entonces, busquemos una mejor solución.**
+
+>En el caso de que se desea agregar un tipo nuevo de pago (Payment), se tendría que cambiar la interfaz para ajustar a los requerimientos del nuevo tipo de pago, a su vez también se tendrá que cambiar la clase PaymentHelper,más precisamente su método showPreviusPayment, ya que dicha clase implementa esta interfaz (Payment). Violando así el OCP ya que al estar abierto a nuevas implementaciones, se tendrá que realizar cambiar en algunas partes del código que no deberian (no es cerrado).
+
+* **Pregunta 16 En el próximo programa, eliminaremos el método newPayment() de la interfaz de payment. Coloca este método en otra interfaz llamada NewPayment. Como resultado, ahora tienes dos interfaces con las operaciones específicas. Dado que todos los tipos de usuarios pueden generar una nueva solicitud de pago, las clases concretas de RegisteredUserPayment y GuestUserPayment implementan la interfaz NewPayment. Pero muestra el último detalle de pago solo para los usuarios registrados. Entonces, la clase RegisteredUser implementa la interfaz payment. Dado que Payment contiene el método previousPaymentInfo(), tiene sentido elegir un nombre mejor, como PreviousPayment en lugar de Payment. Entonces, ahora verá las siguientes interfaces:**
+
+```java
+interface PreviousPayment {
+    void previousPaymentInfo();
+}
+interface NewPayment {
+    void newPayment();
+}
+```
+**Ajuste estos nuevos nombres en la clase auxiliar también. En sección del código debes tener los siguientes archivos:**
+
+**PreviousPayment.java**
+
+**NewPayment.java**
+
+**RegisteredUserPayment.java**
+
+**GuestUserPayment.java**
+
+**PaymentHelper.java**
+
+**Cliente.java**
+
+>La nueva interfaz NewPayment y la interfaz PreviousPayment ahora serán:
+
+```java
+interface NewPayment {
+    void newPayment();
+}
+```
+```java
+interface PreviousPayment {
+    void previousPaymentInfo();
+}
+```
+>Por lo que ahora las clases RegisteredUserPayment, GuestUserPayment y la ejecución del código serán:
+```java
+public class RegisteredUserPayment implements NewPayment,PreviousPayment {
+    String name;
+    public RegisteredUserPayment(String userName) {
+        this.name = userName;
+    }
+    @Override
+    public void previousPaymentInfo(){
+        System.out.println("Recuperando de "+ name+ ", ultimos detalles de pagos.");
+    }
+
+    @Override
+    public void newPayment(){
+        System.out.println("Procesando de "+name+", la actual solicitud de pagos .");
 
     }
 
 }
 ```
+```java
+public class GuestUserPayment implements NewPayment{
+    String name;
+    public GuestUserPayment(){
+        this.name = "guest";
+    }
+    @Override
+    public void newPayment(){
+        System.out.println("Procesando de " + name + "pago actual request.");
+    }
+}
+```
+>![](src/main/resources/I24.jpg)
+
 
 ## Pregunta 26
 Muestra la salida y explica los resultados en función de los métodos entregados.
