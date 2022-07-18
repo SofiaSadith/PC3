@@ -309,6 +309,26 @@ public class GuestUserPayment implements NewPayment{
 >![](src/main/resources/I24.jpg)
 
 
+## Principio de Segregación de Interfaces (Sebastian Segundo)
+
+## Pregunta 25
+Reemplaza el segmento de código con una expresión lambda adecuada. Tú eliges cuál quieres usar.
+
+```java
+class Cliente {
+  public static void main(String[] args) {
+    System.out.println("Demostracion sin ISP");
+    List<Impresora> impresoras = new ArrayList<Impresora>();
+    impresoras.add(new ImpresoraAvanzada());
+    impresoras.add(new ImpresoraBasica());
+    impresoras.forEach((dispositivo) -> {
+      dispositivo.printDocument();
+      dispositivo.sendFax(new LanFax());
+    });
+
+  }
+}
+```
 ## Pregunta 26
 Muestra la salida y explica los resultados en función de los métodos entregados.
 
