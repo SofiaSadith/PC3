@@ -129,6 +129,7 @@ Cliente.java
 >![](src/main/resources/I15.jpeg)
 >
 
+## Principio de Segregación de Interfaces (Sebastian Segundo)
 
 ## Pregunta 25
 Reemplaza el segmento de código con una expresión lambda adecuada. Tú eliges cuál quieres usar.
@@ -266,6 +267,8 @@ Salida:
 >![](src/main/resources/cap30.jpg)
 
 Vemos que se ejecuta sin errores.
+
+## Principio de Inversion de Dependencias (Sebastian Segundo)
 
 ## Pregunta 31
 Salida:
