@@ -16,14 +16,17 @@
 
 * **Pregunta 3 Modifica la clase Empleado. Agrega dos clases SeniorityChecker que contiene el método checkSeniority() y la clase GeneradorIDEmpleado contiene el método generateEmpId(...) para generar la identificación del empleado. Para mejorar la legibilidad del código y evitar torpezas dentro del método main(), utiliza el método estático showEmpDetail(...). Este método llama al método displayEmpDetail() de Empleado, al método generateEmpId() de GeneradorIDEmpleado y al método checkSeniority() de SeniorityChecker. Tú entiendes que este método no era necesario, pero hace que el código del cliente sea simple y fácilmente comprensible.**
 
-
+>Código de la clase Cliente
 >![](src/main/resources/I2.jpeg)
 
-
+>Código de la clase Empleado
 >![](src/main/resources/I3.jpeg)
 
-
+>Código de la clase GeneradoIDEmpleado
 >![](src/main/resources/I4.jpeg)
+
+>Código de la clase SeniorityChecker
+>![](src/main/resources/I11.jpeg)
 
 * **Pregunta 4 Realiza una demostración completa que sigue a SRP. Explica tus resultados**
         Empleado.java
@@ -92,3 +95,35 @@ Cliente.java
 * **Pregunta 7 ¿Cuál es el problema con este diseño y las razones posibles del problema?**
 
 >El problema con este diseño es que si se quiere agregar otra corriente, por ejemplo Ingeniería, se tendría que modificar la clase DistinctionDecider, agregando más condicionales lo que ocasiona un alto acoplamiento. Otro problema ocurrirá si es que se quisiera implementar nuevos métodos para los estudiantes de algún departamento en particular en ese caso nos veríamos en la necesidad de modificar la clase Estudiante, lo cuál demuestra que nuestro código es abierto a extensiones pero por otro lado dichos cambios afectarian al código base ya escrito por lo tanto sería vulnerable a modificaciones y no cumpliría el Principio de abierto y cerrado.
+
+* **Pregunta 8 Debes abordar el método de evaluación para la distinción de una mejor manera. Por lo tanto, crea la interfaz DistinctionDecider que contiene un método llamado EvaluationDistinction.**
+
+![](src/main/resources/I8.jpeg)
+
+* **Pregunta 9 Completa el código de ArtsDistinctionDecider y ScienceDistinctionDecider que implementan esta interfaz y sobreescriben el método de evaluateDistinction(...) para especificar los criterios de evaluación según sus necesidades. De esta forma, los criterios de distinción específicos de flujo se envuelven en una unidad independiente. Debes tener en cuenta que el método de evaluateDistinction(...) acepta un parámetro Estudiante. Significa que ahora también puede pasar un objeto ArtsStudent o un objeto ScienceStudent a este método. El código restante es fácil y no debería tener ningún problema para comprender la siguiente demostración ahora.**
+>Código de la clase ArtsDistinctionDecider:
+>![](src/main/resources/I9.jpeg)
+
+>Código de la clase ScienceDistinctionDecider:
+>![](src/main/resources/I10.jpeg)
+
+* **Pregunta 10 Realiza una demostración completa que sigue a OCP. Explica tus resultados.**
+
+    **Estudiante.java**
+
+    **ArteEstudiante.java**
+
+    **CienciaEstudiante.java**
+
+    **DistinctionDecider.java**
+
+    **ScienceDistinctionDecider.java**
+
+    **ArtsDistinctionDecider.java**
+
+    **Cliente.java**
+
+>![](src/main/resources/I12.jpeg)
+>![](src/main/resources/I13.jpeg)
+>![](src/main/resources/I14.jpeg)
+>![](src/main/resources/I15.jpeg)
