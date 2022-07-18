@@ -266,3 +266,155 @@ Salida:
 >![](src/main/resources/cap30.jpg)
 
 Vemos que se ejecuta sin errores.
+
+## Pregunta 31
+Salida:
+
+>![](src/main/resources/cap31.jpg)
+
+Esta salida se debe a que el cliente hace uso del método
+saveEmployeeId() de interfazUsuario.java que a su vez invoca
+al método saveEmpIdInDatabase() de OracleDatabase.java para poder guardar datos
+de empleados en la BD.
+
+## Pregunta 32
+El programa es simple, pero ¿qué tipo de problemas presenta?
+
+Este programa viola el principio de Inversion de Dependencia(DIP),
+pues una clase concreta de alto nivel (InterfazUsuario) no debe
+depender de una clase concreta de bajo nivel (OracleDatabase).
+
+El código que viola este principio puede acoplarse demasiado,
+y eso hace que el código sea difícil de mantener, ilegible, incluso
+más difícil de probar.
+
+También viola el principio de Abierto-Cerrado(OCP) porque
+si el cliente quiere usar otro tipo de BD se tendria que
+modificar la clase OracleDatabase o crear otra.
+
+De esta forma, el programa se convierte en un programa frágil,
+impredecible y no reutilizable.
+
+## Pregunta 33
+InterfazUsuario.java
+```java
+class InterfazUsuario {
+    private BaseDatos bd;
+
+    public InterfazUsuario(BaseDatos bd) {
+        this.bd = bd;
+    }
+    public void saveEmployeeId(String empId) {
+        bd.saveEmpIdInDatabase(empId);
+    }
+}
+```
+## Pregunta 34
+Completa todos los archivos siguientes de la sección SOLID:
+
+BaseDatos.java
+```java
+interface BaseDatos {
+    public void saveEmpIdInDatabase(String empId);
+}
+```
+OracleDatabase.java
+```java
+class OracleDatabase implements BaseDatos {
+    public void saveEmpIdInDatabase(String empId) {
+        System.out.println("El id: " + empId + " es guardado en la base de datos Oracle.");
+    }
+}
+```
+MySQLDatabase.java
+```java
+class MySQLDatabase implements BaseDatos {
+    public void saveEmpIdInDatabase(String empId) {
+        System.out.println("El id: " + empId + " es guardado en la base de datos MySQL.");
+    }
+}
+```
+Cliente.java
+```java
+public class Cliente {
+    public static void main(String[] args) {
+        System.out.println("Demostracion con DIP");
+        InterfazUsuario usuario;
+        // Usando Oracle
+        usuario = new InterfazUsuario(new OracleDatabase());
+        usuario.saveEmployeeId("E001");
+
+        // Usando Mysql
+        usuario = new InterfazUsuario(new MySQLDatabase());
+        usuario.saveEmployeeId("E001");
+
+        // Cambiando la base de datos objetivo
+        //usuario = new InterfazUsuario(new OracleDatabase());
+
+    }
+}
+```
+Explica los resultados. ¿El programa resuelve todos los posibles problemas del programa que
+no usa DIP?
+
+>![](src/main/resources/cap34.jpg)
+
+Sí los resuelve, pues ahora el cliente puede registrar usuarios en distintas
+BD, gracias a que tanto el módulo de alto nivel (InterfazUsuario)
+y los módulos de bajo nivel (MySQLDatabase, OracleDatabase) dependen de la
+abstraccion BaseDatos (Principio DIP).
+
+Lo que permite implementar nuevas clases de base de datos
+en el código sin modificar las ya existentes (Principo OCP).
+
+De esta manera, se ha reducido el alto acoplamiento que habia
+al principio, lo que hace que el código sea más entendible, testeable
+y reutilizable.
+
+## Pregunta 35
+
+## Pregunta 36
+El constructor de la clase InterfazUsuario acepta un parámetro de base de datos.
+Proporciona una instalación adicional a un usuario cuando utiliza tanto el constructor como el
+método setter (setDatabase) dentro de esta clase. ¿Cuál es el beneficio?.
+
+```java
+class InterfazUsuario {
+    private BaseDatos bd;
+
+    public InterfazUsuario(BaseDatos bd) {
+        this.bd = bd;
+    }
+    public void saveEmployeeId(String empId) {
+        bd.saveEmpIdInDatabase(empId);
+    }
+    public void setBd(BaseDatos bd) {
+        this.bd = bd;
+    }
+}
+```
+El beneficio es que este método nos permite que una
+vez inicializada la variable usuario de tipo InterfazUsuario
+podemos modificar el tipo de BD que queremos utilizar sin necesidad
+de instanciar la variable de nuevo.
+
+```java
+public class Cliente {
+    public static void main(String[] args) {
+        System.out.println("Demostracion con DIP");
+        InterfazUsuario usuario;
+        // Usando Oracle
+        usuario = new InterfazUsuario(new OracleDatabase());
+        usuario.saveEmployeeId("E001");
+
+        // Usando Mysql
+        usuario = new InterfazUsuario(new MySQLDatabase());
+        usuario.saveEmployeeId("E001");
+
+        // Cambiando la base de datos objetivo
+        usuario.setBd(new OracleDatabase());
+        usuario.saveEmployeeId("E001");
+
+    }
+}
+```
