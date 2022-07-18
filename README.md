@@ -308,6 +308,100 @@ public class GuestUserPayment implements NewPayment{
 ```
 >![](src/main/resources/I24.jpg)
 
+* **Pregunta 17 ¿Cuáles son los cambios clave?**
+>Dividir la interfaz Payment en dos interfaces (NewPayment y PreviousPayment), de esta manera se organiza mejor los métodos, ya que de esa manera no se usa innecesariamente un método en una clase, por ejemplo en la clase GuestUserPayment se usaba el método previousPaymentInfo innecesariamente, ya que no tenía sentido que un usuario invitado tuviera pagos antiguos, sin tener un historial previo, consecuencia de esto es que la clase GuestUserPayment, que implementa la interfaz NewPayment, ahora solo tiene un método (newPayment).
+
+* **Pregunta 18 Ten que aquí el enfoque clave estaba en el principio LSP, nada más. Podrías refactorizar fácilmente el código del cliente usando algún método estático. Por ejemplo realiza una modificación donde utilizas un método estático para mostrar todas las solicitudes de pago y utilizar este método siempre que lo necesites.**
+
+```java
+public class PaymentHelper {
+    static List<NewPayment> newPayments = new ArrayList<NewPayment>();
+    static List<PreviousPayment> previousPayments = new ArrayList<PreviousPayment>();
+
+    public void addNewPayment(NewPayment user){
+        newPayments.add(user);
+    }
+    public void addPreviousPayment(PreviousPayment user){
+        previousPayments.add(user);
+    }
+    public void showPreviousPayments() {
+        for (PreviousPayment payment: previousPayments) {
+            payment.previousPaymentInfo();
+            System.out.println("------");
+        }
+    }
+    public void processNewPayments()  {
+        for (NewPayment payment: newPayments) {
+            payment.newPayment();
+            System.out.println("------");
+        }
+    }
+
+    static void showAllPayments(){
+        System.out.println("Detalles de todos los pagos: ");
+        for(PreviousPayment payment : previousPayments) {
+            payment.previousPaymentInfo();
+        }
+        for (NewPayment payment : newPayments){
+            payment.newPayment();
+        }
+
+    }
+}
+```
+```java
+public class Cliente {
+    public static void main(String[] args) {
+
+        System.out.println("Demostracion LSP.\n");
+        PaymentHelper helper = new PaymentHelper();
+
+        // Instanciando dos usuarios registrados
+        RegisteredUserPayment irene = new RegisteredUserPayment("Irene");
+        RegisteredUserPayment claudio = new RegisteredUserPayment("Claudio");
+        // Instanciando el pago de un usuario invitado
+        GuestUserPayment guestUser1 = new GuestUserPayment();
+
+        // Consolidando la informacion del pago anterior al helper
+        helper.addPreviousPayment(irene);
+        helper.addPreviousPayment(claudio);
+
+        // Consolidando nuevas solicitudes de pago al helper
+        helper.addNewPayment(irene);
+        helper.addNewPayment(claudio);
+        helper.addNewPayment(guestUser1);
+
+        // Recupera todos los pagos anteriores de los usuarios registrados
+        helper.showPreviousPayments();
+
+        // Procesa todas las solicitudes de pago nuevos de todos los usuarios
+        helper.processNewPayments();
+
+        PaymentHelper.showAllPayments();
+
+    }
+}
+```
+
+* **Pregunta 19 ¿Por qué un usuario necesita cambiar una clase base (o una interfaz)? Para responder a esto, supongamos que deseas mostrar qué el tipo de fax está utilizando en una fase de desarrollo posterior.**
+
+>En la clase Cliente, en el main, se instancia primero un objeto impresora de tipo ImpresoraAvanzada para luego ejecutar sus métodos printDocument y sendFax. Hasta este punto todo está bien debido a que una impresora avanzada cuenta con la capacidad de hacer estas dos cosas. El problema radica cuando, una vez instanciado otro objeto impresora esta vez de tipo ImpresoraBasica, llama de manera análoga sus dos métodos printDocument y sendFax. Esto debido a que una impresora básica no está en la capacidad de realizar la operación sendFax, sin embargo, cuenta con ese método ya que se está implementado de la interfaz Impresora. Entonces, ya que no puede realizar dicha operación, es por ello que lanza una excepción al momento de ejecutar este método (En este caso está comentado para que no se llegue a lanzar).Violando claramente el principio de segregación de interfaz.
+
+```java
+class Cliente {
+    public static void main(String[] args) {
+
+        List<Impresora> impresoras = new ArrayList<Impresora>();
+        impresoras.add(new ImpresoraAvanzada());
+        impresoras.add(new ImpresoraBasica());
+        impresoras.forEach((dispositivo) -> {
+            dispositivo.printDocument();
+            dispositivo.sendFax(new LanFax());
+        });
+    }
+}
+```
+
 
 ## Pregunta 26
 Muestra la salida y explica los resultados en función de los métodos entregados.
