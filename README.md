@@ -136,7 +136,61 @@ Cliente.java
 >La clase ArtsDistinctionDecider implementa la interfaz DistinctionDecider, tiene al métdo evaluateDistintion que recibe como parámetro el objeto estudiante de la clase Estudiante, aquí se evalúa si el puntaje del estudiante de artes es mayor a 60 para que sea merecedor de una distinción. 
 >![](src/main/resources/I17.jpeg)
 >En la clase Cliente se crean listas para los diferentes tipos de estudiantes y sus corrientes, en este caso una lista para los estudiantes de Ciencias y otra lista para los estudiantes de Arte.
->![](src/main/resources/I18.jpg)
+```java
+import java.util.ArrayList;
+import java.util.List;
+public class Cliente {
+    public static void main(String[] args) {
+        System.out.println("Demostracion OCP");
+        List<Estudiante> CienciasEstudiantes = enrollScienceStudents();
+        List<Estudiante> ArtesEstudiantes = enrollArtsStudents();
+
+        // Muestra todos los resultados.
+        System.out.println("Resultados:");
+
+        for (Estudiante estudiante : CienciasEstudiantes) {
+            System.out.println(estudiante);
+        }
+        for (Estudiante estudiante : ArtesEstudiantes) {
+            System.out.println(estudiante);
+        }
+
+        // Evalua las distinciones
+
+        DistinctionDecider scienceDistinctionDecider = new ScienceDistinctionDecider();
+        DistinctionDecider artsDistinctionDecider = new ArtsDistinctionDecider();
+        System.out.println("Distinciones:");
+        for (Estudiante estudiante : CienciasEstudiantes) {
+            scienceDistinctionDecider.evaluateDistinction(estudiante);
+        }
+        for (Estudiante estudiante : ArtesEstudiantes) {
+            artsDistinctionDecider.evaluateDistinction(estudiante);
+        }
+
+    }
+
+    private static List<Estudiante> enrollScienceStudents() {
+        Estudiante Irene = new CienciaEstudiante("Irene", "R1", 81.5,"Ciencia de la computacion.");
+        Estudiante jessica = new CienciaEstudiante("Jessica", "R2", 72,"Fisica");
+        List<Estudiante> CienciasEstudiantes = new ArrayList<Estudiante>();
+        CienciasEstudiantes.add(Irene);
+        CienciasEstudiantes.add(jessica);
+        return CienciasEstudiantes;
+    }
+
+    private static List<Estudiante> enrollArtsStudents() {
+        Estudiante chalo = new ArteEstudiante("Chalo", "R3", 71,"Historia");
+        Estudiante claudio = new ArteEstudiante("Claudio", "R4", 66.5,"Literatura");
+        List<Estudiante> ArtesEstudiantes = new ArrayList<Estudiante>();
+        ArtesEstudiantes.add(chalo);
+        ArtesEstudiantes.add(claudio);
+        return ArtesEstudiantes;
+    }
+
+
+}
+
+```
 >Cómo se puede ver ahora si cumple el principio de OCP ya que tanto las clase ArteEstudiante y la claseCienciaEstudiante se extienden de una misma clase por lo cuál se puede añadir nuevo código, pero manteniendo el código base. 
 
 
