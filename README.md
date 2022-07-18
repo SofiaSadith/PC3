@@ -47,3 +47,36 @@ del cliente sea simple y fácilmente comprensible.**
 >La clase Empleado tiene al método displayEmpDetail() el cual nos mostrará el nombre y el tiempo de experiencia del empleado.
 >La clase SeniorityChecker, tiene el método checkSeniority el cuál haciendo uso del atributo experienceInYears evaluará si los años de experiencia del empleado son suficientes para considerarlo junior o senior, será considerado senior si los años de experiencia son mayores a 5 años.
 >La clase GeneradorIdEmpleado tiene el método generateEmpId nos generará aleatoriamente el Id del empleado concatenando la primera letra de su nombre con un número aleatorio entre 1000 números enteros.
+
+* **Pregunta 5 ¿Por que no es correcto colocar displayResult() y evaluateDistinction() en la misma clase, como la siguiente:**
+
+    class Estudiante {
+
+        // ....
+
+        public void displayResult() {
+
+        // codigo
+
+        }
+
+        public void evaluateDistinction() {
+
+        // codigo
+
+        }
+
+        // ...
+
+    }
+
+**Sean los siguientes archivos:**
+
+Estudiante.java
+
+DistinctionDecider.java
+
+Cliente.java
+
+>En el caso de que hubiera modificaciones o se quisiera extender los requerimientos, la clase Estudiante se vería siempre expuesta a modificaciones. Por ejemplo, aumentar más tipos de departamentos de los que hay, pues solo necesitamos modificar la lista de departamentos, ya que el método evaluateDistiction hace uso de ella, pero al estar todo en la misma clase Estudiante, esta sería la más expuesta aunque no se quisiera cambiar nada del método displayResult violando así el principio Open/Closed.
+>En el caso del testing, al tener estas clases separadas, nos ayudará a no tener que modificar sus respectivos tests cada vez que se mejore o amplíe dicho código. Además, al tener 2 métodos que hacen cosas muy diferentes en una sola clase, estaría violando el principio de responsabilidad única.
