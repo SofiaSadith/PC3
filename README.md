@@ -24,10 +24,26 @@ de SeniorityChecker. Tú entiendes que este método no era necesario, pero hace 
 del cliente sea simple y fácilmente comprensible.**
 
 
-![](src/main/resources/I2.jpeg)
+>![](src/main/resources/I2.jpeg)
 
 
-![](src/main/resources/I3.jpeg)
+>![](src/main/resources/I3.jpeg)
 
 
-![](src/main/resources/I4.jpeg)
+>![](src/main/resources/I4.jpeg)
+
+* **Pregunta 4 Realiza una demostración completa que sigue a SRP. Explica tus resultados 
+        Empleado.java
+
+        GeneradorIdEmpleado.java
+
+        SeniorityChecker.java
+
+        Cliente.java**
+
+>![](src/main/resources/I5.jpeg)
+
+>La clase Cliente tiene el método main en el cuál se instancia un objeto de la clase Empleado y se llama al método showEmpDetail()
+>La clase Empleado tiene al método displayEmpDetail() el cual nos mostrará el nombre y el tiempo de experiencia del empleado.
+>La clase SeniorityChecker, tiene el método checkSeniority el cuál haciendo uso del atributo experienceInYears evaluará si los años de experiencia del empleado son suficientes para considerarlo junior o senior, será considerado senior si los años de experiencia son mayores a 5 años.
+>La clase GeneradorIdEmpleado tiene el método generateEmpId nos generará aleatoriamente el Id del empleado concatenando la primera letra de su nombre con un número aleatorio entre 1000 números enteros.
